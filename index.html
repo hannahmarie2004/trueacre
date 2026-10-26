@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=eab1c7e1-d39a-47b2-8bad-1683bed4afba
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueAcre · Find clean local food near NYC</title>
+<template id="__bundler_thumbnail" data-bg-color="#FBF9F2">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#FBF9F2"/>
+    <text x="50" y="46" font-family="Georgia,serif" font-weight="700" font-size="17" fill="#22301F" text-anchor="middle">TrueAcre</text>
+    <circle cx="76" cy="40" r="4" fill="#F0A32E" stroke="#22301F" stroke-width="1.2"/>
+    <line x1="30" y1="62" x2="70" y2="62" stroke="#33582F" stroke-width="2"/>
+  </svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#22301F;
+    --pasture:#33582F;
+    --pasture-deep:#274423;
+    --yolk:#F0A32E;
+    --yolk-deep:#D98A14;
+    --paper:#FBF9F2;
+    --card:#FFFFFF;
+    --line:#E3DCC8;
+    --muted:#6B7263;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+  body{
+    font-family:'Public Sans',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+
+  /* ---------- top bar ---------- */
+  .bar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:21px;
+    letter-spacing:-0.03em;display:flex;align-items:baseline;gap:5px;
+  }
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--yolk);display:inline-block;border:1.5px solid var(--ink)}
+  .bar a.farmlink{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;text-decoration:none;
+    color:var(--pasture);border:1.5px solid var(--pasture);padding:7px 12px;border-radius:3px;
+  }
+  .bar a.farmlink:hover{background:var(--pasture);color:#fff}
+
+  /* ---------- hero ---------- */
+  .hero{padding-top:56px;padding-bottom:40px}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;
+    text-transform:uppercase;color:var(--pasture);margin-bottom:18px;
+  }
+  h1{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:clamp(34px,6vw,58px);line-height:1.04;letter-spacing:-0.025em;
+    max-width:760px;
+  }
+  h1 .yolk{
+    background:linear-gradient(transparent 62%, rgba(240,163,46,0.55) 62%);
+  }
+  .hero p.sub{
+    margin-top:18px;max-width:560px;font-size:17px;color:var(--muted);
+  }
+
+  /* ---------- capture form ---------- */
+  .capture{
+    margin-top:28px;display:flex;gap:10px;flex-wrap:wrap;max-width:640px;
+  }
+  .capture input{
+    font-family:'Public Sans',sans-serif;font-size:15px;
+    padding:14px 14px;border:1.5px solid var(--ink);border-radius:4px;background:#fff;color:var(--ink);
+  }
+  .capture input:focus{outline:3px solid var(--yolk);outline-offset:1px}
+  .capture .zip{width:110px;flex:0 0 auto}
+  .capture .email{flex:1 1 240px}
+  .capture button{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;
+    background:var(--pasture);color:#fff;border:1.5px solid var(--pasture-deep);
+    padding:14px 22px;border-radius:4px;cursor:pointer;flex:0 0 auto;
+  }
+  .capture button:hover{background:var(--pasture-deep)}
+  .capture button:focus{outline:3px solid var(--yolk);outline-offset:1px}
+  .form-note{
+    margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);
+  }
+  .confirm{
+    display:none;margin-top:14px;padding:12px 14px;background:#fff;border:1.5px solid var(--pasture);
+    border-radius:4px;font-size:14px;max-width:640px;
+  }
+  .confirm strong{color:var(--pasture)}
+
+  /* ---------- standards strip ---------- */
+  .standards{
+    margin-top:44px;padding-top:22px;padding-bottom:6px;border-top:1px solid var(--line);
+  }
+  .standards .label{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+  }
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    padding:8px 13px;border:1.5px solid var(--ink);border-radius:3px;background:#fff;
+    cursor:pointer;color:var(--ink);user-select:none;transition:background .12s,color .12s;
+  }
+  .chip:hover{background:#F4EFDF}
+  .chip:focus-visible{outline:3px solid var(--yolk);outline-offset:1px}
+  .chip.on{background:var(--ink);color:var(--yolk);border-color:var(--ink)}
+  .count{
+    margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);
+  }
+
+  /* ---------- farm grid ---------- */
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+    gap:12px;padding-top:22px;padding-bottom:56px;
+  }
+  .farm{
+    background:var(--card);border:1.5px solid var(--line);border-radius:6px;
+    padding:15px 16px 14px;display:flex;flex-direction:column;gap:9px;
+    transition:border-color .12s;
+  }
+  .farm:hover{border-color:var(--pasture)}
+  .farm.hide{display:none}
+  .tags{display:flex;gap:5px;flex-wrap:wrap}
+  .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.02em;
+    padding:4px 8px;border-radius:2px;background:#F2EEDF;color:var(--pasture-deep);
+    border:1px solid #E0D9BF;
+  }
+  .tag.egg{background:#FCEFD6;border-color:#F2D9A6;color:#9A6A0A}
+  .farm .row{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  }
+  .farm h3{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:18px;
+    letter-spacing:-0.01em;line-height:1.15;
+  }
+  .farm .loc{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.05em;margin-top:3px;
+  }
+  .farm a.order{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--pasture);
+    text-decoration:none;border-bottom:1.5px solid var(--yolk);padding-bottom:1px;
+    white-space:nowrap;flex:0 0 auto;
+  }
+  .farm a.order:hover{color:var(--pasture-deep)}
+
+  /* ---------- list your farm ---------- */
+  .listfarm{
+    background:var(--pasture);color:#F4F1E4;border-radius:8px;
+    padding:44px 34px;margin-bottom:64px;
+  }
+  .listfarm h2{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(26px,4vw,36px);
+    letter-spacing:-0.02em;line-height:1.1;max-width:520px;
+  }
+  .listfarm p{margin-top:12px;max-width:520px;font-size:15.5px;color:#D8DCC8}
+  .farmform{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:640px}
+  .farmform input,.farmform textarea{
+    font-family:'Public Sans',sans-serif;font-size:14.5px;padding:12px 13px;
+    border:1.5px solid #4E7448;border-radius:4px;background:#2C4A28;color:#fff;
+  }
+  .farmform input::placeholder,.farmform textarea::placeholder{color:#A8B49B}
+  .farmform input:focus,.farmform textarea:focus{outline:3px solid var(--yolk);outline-offset:1px}
+  .farmform textarea{grid-column:1/-1;min-height:74px;resize:vertical}
+  .farmform button{
+    grid-column:1/-1;justify-self:start;
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;
+    background:var(--yolk);color:var(--ink);border:1.5px solid var(--yolk-deep);
+    padding:13px 24px;border-radius:4px;cursor:pointer;
+  }
+  .farmform button:hover{background:var(--yolk-deep)}
+  .farmform button:focus{outline:3px solid #fff;outline-offset:1px}
+  .farmconfirm{display:none;margin-top:16px;font-size:14.5px;color:#fff}
+  .farmconfirm strong{color:var(--yolk)}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);padding:26px 0 40px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);
+    display:flex;flex-direction:column;gap:6px;
+  }
+
+  @media (max-width:560px){
+    .farmform{grid-template-columns:1fr}
+    .capture .zip{width:100%}
+    .listfarm{padding:32px 22px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="brand">TrueAcre<span class="dot"></span></div>
+    <a class="farmlink" href="#list-your-farm">List your farm, free</a>
+  </div>
+</div>
+
+<header class="hero wrap">
+  <div class="eyebrow">NYC metro · Hudson Valley · Long Island</div>
+  <h1>Farms that state their <span class="yolk">standards</span> and sell direct to NYC.</h1>
+  <p class="sub">Pasture-raised eggs, 100% grass-finished beef, certified organic produce. One list, no middleman. Finding real farms shouldn't take detective work, so I did the digging for you.</p>
+
+  <form class="capture" id="captureForm" action="https://formspree.io/f/mzdnbpoe" method="POST" novalidate>
+    <input class="zip" type="text" name="zip" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="Zip" aria-label="Zip code" required>
+    <input class="email" type="email" name="email" placeholder="Email" aria-label="Email address" required>
+    <button type="submit">Find my farms</button>
+  </form>
+  <div class="form-note">Free while we build. No spam, one email when your area is ready.</div>
+  <div class="confirm" id="captureConfirm"><strong>You're on the list.</strong> We'll email you when farms near your zip are confirmed.</div>
+</header>
+
+<section class="standards wrap" aria-label="Filter farms by standard">
+  <div class="label">Filter by standard</div>
+  <div class="chips" id="chips">
+    <button class="chip" data-f="eggs">Pasture-raised eggs</button>
+    <button class="chip" data-f="beef">100% grass-fed beef</button>
+    <button class="chip" data-f="poultry">Pastured poultry</button>
+    <button class="chip" data-f="pork">Pastured pork</button>
+    <button class="chip" data-f="organic">Certified organic produce</button>
+    <button class="chip" data-f="csa">CSA / farm box</button>
+    <button class="chip" data-f="dairy">Farm dairy</button>
+  </div>
+  <div class="count" id="count">Showing 15 farms</div>
+</section>
+
+<main class="grid wrap" id="grid">
+
+  <article class="farm" data-t="beef lamb pork poultry eggs">
+    <div class="tags"><span class="tag egg">pastured eggs</span><span class="tag">100% grass-fed beef + lamb</span><span class="tag">pastured pork + poultry</span></div>
+    <div class="row">
+      <div>
+        <h3>Kinderhook Farm</h3>
+        <div class="loc">Valatie, NY · farm store daily</div>
+      </div>
+      <a class="order" href="https://kinderhookfarm.square.site/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="beef lamb poultry pork csa">
+    <div class="tags"><span class="tag">grass-finished beef + lamb</span><span class="tag">meat CSA</span></div>
+    <div class="row">
+      <div>
+        <h3>Herondale Farm</h3>
+        <div class="loc">Ancramdale, NY · NYC pickups</div>
+      </div>
+      <a class="order" href="https://www.herondalefarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="poultry beef pork lamb">
+    <div class="tags"><span class="tag">certified organic pastured chicken</span><span class="tag">grass-fed beef</span></div>
+    <div class="row">
+      <div>
+        <h3>Wrong Direction Farm</h3>
+        <div class="loc">Canajoharie, NY · delivers NYC + LI</div>
+      </div>
+      <a class="order" href="https://wrongdirectionfarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic dairy eggs beef">
+    <div class="tags"><span class="tag">certified biodynamic</span><span class="tag">organic produce + dairy</span><span class="tag egg">eggs</span></div>
+    <div class="row">
+      <div>
+        <h3>Hawthorne Valley Farm</h3>
+        <div class="loc">Ghent, NY · NYC Greenmarkets</div>
+      </div>
+      <a class="order" href="https://farm.hawthornevalley.org/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic beef pork poultry eggs csa">
+    <div class="tags"><span class="tag">certified organic vegetables</span><span class="tag">CSA</span><span class="tag egg">eggs</span></div>
+    <div class="row">
+      <div>
+        <h3>Roxbury Farm</h3>
+        <div class="loc">Kinderhook, NY · NYC drop sites</div>
+      </div>
+      <a class="order" href="https://www.roxburyfarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic eggs csa">
+    <div class="tags"><span class="tag">certified organic vegetables</span><span class="tag egg">pasture-raised eggs</span><span class="tag">CSA</span></div>
+    <div class="row">
+      <div>
+        <h3>Hearty Roots Community Farm</h3>
+        <div class="loc">Clermont, NY · BK + MHTN pickup</div>
+      </div>
+      <a class="order" href="https://www.heartyroots.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="poultry pork beef lamb">
+    <div class="tags"><span class="tag">certified organic pastured chicken</span><span class="tag">100% grass-fed beef + lamb</span></div>
+    <div class="row">
+      <div>
+        <h3>Reber Rock Farm</h3>
+        <div class="loc">Essex, NY · delivery + pickup</div>
+      </div>
+      <a class="order" href="https://reberrockfarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="beef pork">
+    <div class="tags"><span class="tag">dry-aged grass-fed beef</span><span class="tag">pastured pork</span></div>
+    <div class="row">
+      <div>
+        <h3>Beaver Brook Ranch</h3>
+        <div class="loc">Hope, NJ · ships + pickup</div>
+      </div>
+      <a class="order" href="https://beaverbrookranch.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="beef pork poultry eggs organic">
+    <div class="tags"><span class="tag">grass-fed beef</span><span class="tag">organic vegetables</span><span class="tag egg">free-range eggs</span></div>
+    <div class="row">
+      <div>
+        <h3>Sweetman's Farm</h3>
+        <div class="loc">Warwick, NY · Orange County</div>
+      </div>
+      <a class="order" href="https://sweetmansfarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="eggs">
+    <div class="tags"><span class="tag egg">pasture-raised eggs</span><span class="tag">seasonal produce</span></div>
+    <div class="row">
+      <div>
+        <h3>Gray Family Farm</h3>
+        <div class="loc">New Windsor, NY · farm stand</div>
+      </div>
+      <a class="order" href="https://grayfamilyfarm.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="dairy beef">
+    <div class="tags"><span class="tag">farm dairy</span><span class="tag">meat bundles</span></div>
+    <div class="row">
+      <div>
+        <h3>Crosswinds Farm &amp; Creamery</h3>
+        <div class="loc">Rock Stream, NY · pickup + delivery</div>
+      </div>
+      <a class="order" href="https://crosswindsfarmcreamery.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="beef">
+    <div class="tags"><span class="tag">grass-fed beef</span></div>
+    <div class="row">
+      <div>
+        <h3>Kiernan Farm</h3>
+        <div class="loc">Gardiner, NY · Hudson Valley</div>
+      </div>
+      <a class="order" href="https://www.kiernanfarm.com/grass-fed-beef" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic csa">
+    <div class="tags"><span class="tag">certified organic produce</span><span class="tag">CSA</span></div>
+    <div class="row">
+      <div>
+        <h3>Green Thumb Organic Farm</h3>
+        <div class="loc">Water Mill, NY · Brooklyn CSA</div>
+      </div>
+      <a class="order" href="https://www.greenthumborganicfarm.com/csa" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic csa dairy">
+    <div class="tags"><span class="tag">organic heirloom vegetables</span><span class="tag">Indian farm box CSA</span></div>
+    <div class="row">
+      <div>
+        <h3>Gopal Farm</h3>
+        <div class="loc">New Paltz, NY · Hudson Valley</div>
+      </div>
+      <a class="order" href="https://gopal.farm/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+  <article class="farm" data-t="organic eggs poultry pork lamb beef csa">
+    <div class="tags"><span class="tag">certified organic vegetables</span><span class="tag">pasture-raised beef</span><span class="tag egg">eggs</span></div>
+    <div class="row">
+      <div>
+        <h3>Liberty Farms</h3>
+        <div class="loc">Ghent, NY · CSA open</div>
+      </div>
+      <a class="order" href="https://libertyfarmsny.com/" target="_blank" rel="noopener">Order →</a>
+    </div>
+  </article>
+
+</main>
+
+<div class="wrap">
+  <section class="listfarm" id="list-your-farm">
+    <h2>Sell clean food near NYC? Get listed free.</h2>
+    <p>Good farms don't advertise. I grew up on one, so I know where to look. TrueAcre sends high-intent NYC buyers straight to your farm: you keep the customer, the order, and the margin. Listings cost nothing while we test.</p>
+    <form class="farmform" id="farmForm" action="https://formspree.io/f/meeyqjng" method="POST" novalidate>
+      <input type="text" name="farm_name" placeholder="Farm name" aria-label="Farm name" required>
+      <input type="email" name="email" placeholder="Email" aria-label="Farm email" required>
+      <input type="text" name="location" placeholder="Town, state" aria-label="Farm location">
+      <input type="text" name="website" placeholder="Website or Instagram" aria-label="Farm website">
+      <textarea name="products_standards" placeholder="What do you raise or grow, and what standards do you want listed? (e.g. 100% grass-finished beef, certified organic)" aria-label="Products and standards"></textarea>
+      <button type="submit">Request a free listing</button>
+    </form>
+    <div class="farmconfirm" id="farmConfirm"><strong>Got it.</strong> We'll reach out within a few days to confirm your listing details.</div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div>TrueAcre is an early test. Listings show farm-stated standards and public ordering paths. We take no commission.</div>
+    <div>Farms confirm their own practices. Buy direct, ask questions, know your farmer.</div>
+  </footer>
+</div>
+
+<script>
+  // ---- standards filter ----
+  const chips = document.querySelectorAll('.chip');
+  const farms = document.querySelectorAll('.farm');
+  const count = document.getElementById('count');
+  let active = new Set();
+
+  chips.forEach(c => c.addEventListener('click', () => {
+    const f = c.dataset.f;
+    if (active.has(f)) { active.delete(f); c.classList.remove('on'); }
+    else { active.add(f); c.classList.add('on'); }
+    let shown = 0;
+    farms.forEach(farm => {
+      const tags = farm.dataset.t.split(' ');
+      const match = active.size === 0 || [...active].every(a => tags.includes(a));
+      farm.classList.toggle('hide', !match);
+      if (match) shown++;
+    });
+    count.textContent = active.size === 0
+      ? 'Showing ' + farms.length + ' farms'
+      : 'Showing ' + shown + ' farm' + (shown === 1 ? '' : 's') + ' matching ' + active.size + ' standard' + (active.size === 1 ? '' : 's');
+  }));
+
+  // ---- top bar button scrolls to farm form ----
+  document.querySelector('.farmlink').addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('list-your-farm').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ---- form submission via Formspree (keeps visitor on the page) ----
+  function wireForm(formId, confirmId) {
+    const form = document.getElementById(formId);
+    const confirm = document.getElementById(confirmId);
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const btn = form.querySelector('button[type="submit"]');
+      const label = btn.textContent;
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          confirm.style.display = 'block';
+          form.reset();
+        } else {
+          alert('Something went wrong sending the form. Please try again.');
+        }
+      } catch (err) {
+        alert('Could not connect. Check your internet and try again.');
+      }
+      btn.textContent = label;
+      btn.disabled = false;
+    });
+  }
+  wireForm('captureForm', 'captureConfirm');
+  wireForm('farmForm', 'farmConfirm');
+</script>
+
+</body>
+</html>
